@@ -4,6 +4,10 @@ import { useState } from "react";
 import { supabase } from "../src/supabase";
 import Logo from "./Logo";
 import type { ClienteData } from "../types";
+import { CiLock } from "react-icons/ci";
+import { PiPhoneThin } from "react-icons/pi";
+import { GoQuestion } from "react-icons/go";
+import { MdPersonOutline } from "react-icons/md";
 
 interface LoginScreenProps {
   onLoginSuccess: (cliente: ClienteData) => void;
@@ -42,7 +46,7 @@ export default function LoginScreen({
   };
 
   return (
-    <div className="min-h-dvh w-full flex flex-col items-center justify-center px-6 py-8 bg-gradient-to-br from-zinc-700 via-zinc-900 to-black">
+    <div className="min-h-dvh w-full flex flex-col items-center justify-center py-6 bg-black/40 md:bg-gradient-to-br from-zinc-700 via-zinc-900 to-black">
       {/* Noise */}
       <div
         className="fixed inset-0 opacity-15 pointer-events-none"
@@ -50,50 +54,68 @@ export default function LoginScreen({
           backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
         }}
       />
-      <div className="relative w-full max-w-sm flex flex-col items-center">
-        <Logo />
+      <div className="bg-black/40 rounded-[3em] shadow-xl relative w-full max-w-sm flex flex-col items-center">
+        <div className="relative w-full overflow-hidden">
+          <Logo />
+        </div>
 
-        <div className="bg-black w-full rounded-[3rem] p-8 shadow-xl flex flex-col items-center">
-          <input
-            type="text"
-            placeholder="Telefone"
-            className="w-full h-14 mb-6 pl-4 rounded-full bg-white text-zinc-800 placeholder:text-zinc-400 shadow-lg outline-none"
-            value={telefone}
-            onChange={(e) => setTelefone(e.target.value)}
-          />
+        <div className="w-full p-8 px-4 flex flex-col items-center gap-6">
+          <label className="w-full flex border border-orange-500 rounded-2xl overflow-hidden">
+            <div className="px-3 flex items-center justify-center">
+              <PiPhoneThin className="text-orange-500 w-5 h-5 shrink-0" />
+            </div>
+            <input
+              type="text"
+              placeholder="Telefone"
+              className="h-14 pl-2 grow text-zinc-300 placeholder:text-zinc-400 shadow-lg outline-none"
+              value={telefone}
+              onChange={(e) => setTelefone(e.target.value)}
+            />
+          </label>
 
-          <input
-            type="password"
-            placeholder="Senha"
-            className="w-full h-14 mb-6 pl-4 rounded-full bg-white text-zinc-800 placeholder:text-zinc-400 shadow-lg outline-none"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-          />
+          <label className="w-full flex border border-orange-500 rounded-2xl overflow-hidden">
+            <div className="px-3 flex items-center justify-center">
+              <CiLock className="text-orange-500 font-bold w-5 h-5 shrink-0" />
+            </div>
+            <input
+              type="password"
+              placeholder="Senha"
+              className="h-14 pl-2 grow text-zinc-300 placeholder:text-zinc-400 shadow-lg outline-none"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+            />
+          </label>
 
           <button
             onClick={fazerLogin}
-            className="w-full h-16 rounded-full bg-orange-500 text-white text-2xl font-extrabold shadow-xl hover:bg-orange-600 transition-colors"
+            className="w-full h-16 rounded-full bg-gradient-to-t from-orange-500 to-orange-800 text-white text-2xl font-extrabold shadow-xl hover:bg-orange-100 transition-colors"
           >
             Entrar
           </button>
 
           {mensagem && (
-            <p className="text-red-400 mt-4 text-sm font-semibold">
+            <p className="text-red-400 text-sm font-semibold">
               {mensagem}
             </p>
           )}
 
-          <div className="flex justify-between w-full mt-6 text-orange-500 text-sm font-semibold">
-            <button className="hover:text-orange-400 cursor-pointer">
-              Esqueceu a senha?
-            </button>
+          <div className="flex justify-between gap-8 w-full  text-orange-500 text-sm font-semibold">
+            <label className="w-full flex rounded-2xl items-center">
+              <GoQuestion className="text-orange-500 font-bold w-8 h-8 shrink-0 cursor-pointer" />
+              <button className="hover:text-orange-400 cursor-pointer">
+                Esqueceu a senha?
+              </button>
+            </label>
 
-            <button
-              onClick={onIrParaCadastro}
-              className="hover:text-orange-400 cursor-pointer"
-            >
-              Não tem uma conta? Registre-se
-            </button>
+            <label className="w-full flex gap-1 items-center rounded-2xl">
+              <MdPersonOutline className="text-orange-500 font-bold w-8 h-8 shrink-0 cursor-pointer" />
+              <button
+                onClick={onIrParaCadastro}
+                className="hover:text-orange-400 cursor-pointer"
+              >
+                Não tem uma conta? Registre-se
+              </button>
+            </label>
           </div>
         </div>
       </div>
