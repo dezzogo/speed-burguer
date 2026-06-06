@@ -54,7 +54,7 @@ export default function LoginScreen({
           backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
         }}
       />
-      <div className="bg-black/40 rounded-[3em] shadow-xl relative w-full max-w-sm flex flex-col items-center">
+      <div className="bg-black/40 rounded-[3em] shadow-xl relative w-full max-w-sm flex flex-col items-center border border-orange-500/80">
         <div className="relative w-full overflow-hidden">
           <Logo />
         </div>
@@ -99,19 +99,19 @@ export default function LoginScreen({
             </p>
           )}
 
-          <div className="flex justify-between gap-8 w-full  text-orange-500 text-sm font-semibold">
-            <label className="w-full flex rounded-2xl items-center">
+          <div className="flex justify-between gap-8 w-full text-orange-500 text-sm font-semibold">
+            <label className="flex items-center gap-1 shrink-0">
               <GoQuestion className="text-orange-500 font-bold w-8 h-8 shrink-0 cursor-pointer" />
-              <button className="hover:text-orange-400 cursor-pointer">
+              <button className="hover:text-orange-400 cursor-pointer whitespace-nowrap">
                 Esqueceu a senha?
               </button>
             </label>
 
-            <label className="w-full flex gap-1 items-center rounded-2xl">
+            <label className="flex items-center gap-1">
               <MdPersonOutline className="text-orange-500 font-bold w-8 h-8 shrink-0 cursor-pointer" />
               <button
                 onClick={onIrParaCadastro}
-                className="hover:text-orange-400 cursor-pointer"
+                className="hover:text-orange-400 cursor-pointer text-left leading-tight"
               >
                 Não tem uma conta? Registre-se
               </button>
