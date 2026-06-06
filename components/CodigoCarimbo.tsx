@@ -23,7 +23,7 @@ export default function CodigoCarimbo({ cliente, onCarimboAdicionado }: CodigoCa
     }
 
     if (cliente.quantidade_carimbos >= 10) {
-      setMensagem('Você já completou a cartela!');
+      setMensagem('Você já completou a cartela! Resgate o seu prêmio');
       return;
     }
 

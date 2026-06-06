@@ -17,9 +17,18 @@ export default function CadastroPage() {
   const [telefone, setTelefone] = useState('');
   const [senha, setSenha] = useState('');
   const [mensagem, setMensagem] = useState('');
+  const PERGUNTAS_SECRETAS = [
+  'Qual o nome do seu primeiro pet?',
+  'Qual a cidade onde você nasceu?',
+  'Qual o nome da sua mãe?',
+  'Qual era o nome da sua escola primária?',
+  'Qual o seu time de futebol favorito?',
+];
+  const [respostaCadastro, setRespostaCadastro] = useState('');
+  const [perguntaCadastro, setPerguntaCadastro] = useState(PERGUNTAS_SECRETAS[0]);
 
   const fazerCadastro = async () => {
-    if (!nome || !telefone || !senha) {
+    if (!nome || !telefone || !senha || !respostaCadastro) {
       setMensagem('Por favor, preencha todos os campos.');
       return;
     }
@@ -28,7 +37,7 @@ export default function CadastroPage() {
 
     const { data, error } = await supabase
       .from('cartoes_fidelidade')
-      .insert([{ nome_cliente: nome, telefone, senha, quantidade_carimbos: 0 }])
+      .insert([{ nome_cliente: nome, telefone, senha, quantidade_carimbos: 0, perguntaCadastro, respostaCadastro}])
       .select()
       .single();
 
