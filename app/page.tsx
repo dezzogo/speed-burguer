@@ -21,8 +21,7 @@ export default function Home() {
   };
 
   return (
-    <main className="font-sans text-black">
-
+    <main>
       {tela === 'login' && (
         <LoginScreen
           onLoginSuccess={handleLoginSuccess}
@@ -30,29 +29,20 @@ export default function Home() {
         />
       )}
 
-      {tela !== 'login' && (
-        <div className="min-h-screen bg-orange-500 flex justify-center items-center p-4">
-          <div className="w-full max-w-sm relative">
-
-            {tela === 'cadastro' && (
-              <CadastroScreen
-                onCadastroSuccess={handleLoginSuccess}
-                onVoltarParaLogin={() => setTela('login')}
-              />
-            )}
-
-            {tela === 'principal' && cliente && (
-              <PrincipalScreen
-                cliente={cliente}
-                onClienteAtualizado={setCliente}
-                onSair={handleSair}
-              />
-            )}
-
-          </div>
-        </div>
+      {tela === 'cadastro' && (
+        <CadastroScreen
+          onCadastroSuccess={handleLoginSuccess}
+          onVoltarParaLogin={() => setTela('login')}
+        />
       )}
 
+      {tela === 'principal' && cliente && (
+        <PrincipalScreen
+          cliente={cliente}
+          onClienteAtualizado={setCliente}
+          onSair={handleSair}
+        />
+      )}
     </main>
   );
 }

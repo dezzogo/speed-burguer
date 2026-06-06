@@ -3,6 +3,12 @@
 import { useState } from 'react';
 import { supabase } from '../src/supabase';
 import type { ClienteData } from '../types';
+import { CiLock } from 'react-icons/ci';
+import { PiPhoneThin } from 'react-icons/pi';
+import { MdPersonOutline } from 'react-icons/md';
+import { GoArrowLeft } from 'react-icons/go';
+import Logo from './Logo';
+import ScreenBackground from './ScreenBackground';
 
 interface CadastroScreenProps {
   onCadastroSuccess: (cliente: ClienteData) => void;
@@ -32,7 +38,6 @@ export default function CadastroScreen({ onCadastroSuccess, onVoltarParaLogin }:
     if (error) {
       setMensagem('Erro ao criar conta. Verifique os dados ou mude o telefone.');
     } else {
-      setMensagem('✅ Conta criada com sucesso!');
       setNome('');
       setTelefone('');
       setSenha('');
@@ -41,54 +46,76 @@ export default function CadastroScreen({ onCadastroSuccess, onVoltarParaLogin }:
   };
 
   return (
-    <div className="flex flex-col items-center">
-      <div className="bg-gray-200 text-gray-800 text-xl font-bold py-6 px-12 rounded-[3rem] mb-6 text-center shadow-lg w-full">
-        Cadastro
+    <ScreenBackground>
+      <div className="mx-auto max-w-sm flex flex-col items-center">
+        <div className="bg-black/40 rounded-[3em] shadow-xl w-full flex flex-col items-center border border-orange-500/80">
+          <div className="w-full overflow-hidden">
+            <Logo />
+          </div>
+
+          <div className="w-full p-8 px-4 flex flex-col items-center gap-6">
+            <div className="w-full flex border border-orange-500 rounded-2xl overflow-hidden">
+              <div className="px-3 flex items-center justify-center">
+                <MdPersonOutline className="text-orange-500 w-5 h-5 shrink-0" />
+              </div>
+              <input
+                type="text"
+                placeholder="Nome Completo"
+                className="h-14 pl-2 grow bg-transparent text-zinc-300 placeholder:text-zinc-400 outline-none"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+              />
+            </div>
+
+            <div className="w-full flex border border-orange-500 rounded-2xl overflow-hidden">
+              <div className="px-3 flex items-center justify-center">
+                <PiPhoneThin className="text-orange-500 w-5 h-5 shrink-0" />
+              </div>
+              <input
+                type="text"
+                placeholder="Telefone"
+                className="h-14 pl-2 grow bg-transparent text-zinc-300 placeholder:text-zinc-400 outline-none"
+                value={telefone}
+                onChange={(e) => setTelefone(e.target.value)}
+              />
+            </div>
+
+            <div className="w-full flex border border-orange-500 rounded-2xl overflow-hidden">
+              <div className="px-3 flex items-center justify-center">
+                <CiLock className="text-orange-500 w-5 h-5 shrink-0" />
+              </div>
+              <input
+                type="password"
+                placeholder="Senha"
+                className="h-14 pl-2 grow bg-transparent text-zinc-300 placeholder:text-zinc-400 outline-none"
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
+              />
+            </div>
+
+            <button
+              onClick={fazerCadastro}
+              className="w-full h-16 rounded-full bg-gradient-to-t from-orange-500 to-orange-800 text-white text-2xl font-extrabold shadow-xl hover:opacity-90 transition-opacity"
+            >
+              Cadastrar e Entrar
+            </button>
+
+            {mensagem && (
+              <p className="text-red-400 text-sm font-semibold">{mensagem}</p>
+            )}
+
+            <div className="flex items-center gap-1 text-orange-500 text-sm font-semibold">
+              <GoArrowLeft className="w-5 h-5 shrink-0" />
+              <button
+                onClick={onVoltarParaLogin}
+                className="hover:text-orange-400 cursor-pointer"
+              >
+                Voltar para o Login
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-
-      <div className="bg-black w-full rounded-[3rem] p-8 shadow-xl flex flex-col items-center">
-        <h2 className="text-white text-2xl font-bold mb-6">Criar Conta</h2>
-
-        <input
-          type="text"
-          placeholder="Nome Completo"
-          className="bg-gray-200 rounded-full w-full py-3 px-6 mb-4 text-center text-black outline-none focus:ring-2 focus:ring-orange-500"
-          value={nome}
-          onChange={(e) => setNome(e.target.value)}
-        />
-
-        <input
-          type="text"
-          placeholder="Telefone"
-          className="bg-gray-200 rounded-full w-full py-3 px-6 mb-4 text-center text-black outline-none focus:ring-2 focus:ring-orange-500"
-          value={telefone}
-          onChange={(e) => setTelefone(e.target.value)}
-        />
-
-        <input
-          type="password"
-          placeholder="Senha"
-          className="bg-gray-200 rounded-full w-full py-3 px-6 mb-6 text-center text-black outline-none focus:ring-2 focus:ring-orange-500"
-          value={senha}
-          onChange={(e) => setSenha(e.target.value)}
-        />
-
-        <button
-          onClick={fazerCadastro}
-          className="bg-orange-500 text-white font-bold rounded-full py-3 px-10 hover:bg-orange-600 transition-colors w-full mb-4"
-        >
-          Cadastrar e Entrar
-        </button>
-
-        {mensagem && <p className="text-red-400 text-sm mb-4">{mensagem}</p>}
-
-        <button
-          onClick={onVoltarParaLogin}
-          className="text-gray-400 hover:text-white text-sm font-semibold underline"
-        >
-          Voltar para o Login
-        </button>
-      </div>
-    </div>
+    </ScreenBackground>
   );
 }
