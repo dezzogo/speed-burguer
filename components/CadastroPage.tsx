@@ -17,19 +17,28 @@ export default function CadastroPage() {
   const [telefone, setTelefone] = useState('');
   const [senha, setSenha] = useState('');
   const [mensagem, setMensagem] = useState('');
-  const PERGUNTAS_SECRETAS = [
-  'Qual o nome do seu primeiro pet?',
-  'Qual a cidade onde você nasceu?',
-  'Qual o nome da sua mãe?',
-  'Qual era o nome da sua escola primária?',
-  'Qual o seu time de futebol favorito?',
-];
-  const [respostaCadastro, setRespostaCadastro] = useState('');
-  const [perguntaCadastro, setPerguntaCadastro] = useState(PERGUNTAS_SECRETAS[0]);
 
   const fazerCadastro = async () => {
-    if (!nome || !telefone || !senha || !respostaCadastro) {
+    const nomeTrimmed = nome.trim();
+    const telefoneTrimmed = telefone.trim();
+    const senhaTrimmed = senha.trim();
+
+    if (!nomeTrimmed || !telefoneTrimmed || !senhaTrimmed) {
       setMensagem('Por favor, preencha todos os campos.');
+      return;
+    }
+
+    setMensagem('Verificando dados...');
+
+    // Verifica se o telefone já está cadastrado
+    const { data: existente } = await supabase
+      .from('cartoes_fidelidade')
+      .select('id')
+      .eq('telefone', telefoneTrimmed)
+      .maybeSingle();
+
+    if (existente) {
+      setMensagem('Este telefone já possui uma conta cadastrada.');
       return;
     }
 
@@ -37,12 +46,12 @@ export default function CadastroPage() {
 
     const { data, error } = await supabase
       .from('cartoes_fidelidade')
-      .insert([{ nome_cliente: nome, telefone, senha, quantidade_carimbos: 0, perguntaCadastro, respostaCadastro}])
+      .insert([{ nome_cliente: nomeTrimmed, telefone: telefoneTrimmed, senha: senhaTrimmed, quantidade_carimbos: 0 }])
       .select()
       .single();
 
     if (error) {
-      setMensagem('Erro ao criar conta. Verifique os dados ou mude o telefone.');
+      setMensagem('Erro ao criar conta. Tente novamente.');
     } else {
       sessionStorage.setItem('cliente', JSON.stringify(data as ClienteData));
       router.push('/principal');
@@ -104,7 +113,7 @@ export default function CadastroPage() {
 
             <button
               onClick={fazerCadastro}
-              className="w-full h-16 rounded-full bg-gradient-to-t from-orange-500 to-orange-800 text-white text-2xl font-extrabold shadow-xl hover:opacity-90 transition-opacity"
+              className="w-full h-16 rounded-full bg-gradient-to-t from-orange-500 to-orange-800 text-white text-2xl font-extrabold shadow-xl hover:opacity-90 transition-opacity cursor-pointer"
             >
               Cadastrar e Entrar
             </button>

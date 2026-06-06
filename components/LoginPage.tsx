@@ -18,7 +18,10 @@ export default function LoginPage() {
   const [mensagem, setMensagem] = useState('');
 
   const fazerLogin = async () => {
-    if (!telefone || !senha) {
+    const telefoneTrimmed = telefone.trim();
+    const senhaTrimmed = senha.trim();
+
+    if (!telefoneTrimmed || !senhaTrimmed) {
       setMensagem('Por favor, preencha todos os campos.');
       return;
     }
@@ -28,8 +31,8 @@ export default function LoginPage() {
     const { data, error } = await supabase
       .from('cartoes_fidelidade')
       .select('*')
-      .eq('telefone', telefone)
-      .eq('senha', senha)
+      .eq('telefone', telefoneTrimmed)
+      .eq('senha', senhaTrimmed)
       .single();
 
     if (error || !data) {
@@ -77,7 +80,7 @@ export default function LoginPage() {
 
             <button
               onClick={fazerLogin}
-              className="w-full h-16 rounded-full bg-gradient-to-t from-orange-500 to-orange-800 text-white text-2xl font-extrabold shadow-xl hover:opacity-90 transition-opacity"
+              className="w-full h-16 rounded-full bg-gradient-to-t from-orange-500 to-orange-800 text-white text-2xl font-extrabold shadow-xl hover:opacity-90 transition-opacity cursor-pointer"
             >
               Entrar
             </button>
@@ -89,7 +92,10 @@ export default function LoginPage() {
             <div className="flex justify-between gap-8 w-full text-orange-500 text-sm font-semibold">
               <div className="flex items-center gap-1 shrink-0">
                 <GoQuestion className="text-orange-500 w-8 h-8 shrink-0" />
-                <button className="hover:text-orange-400 cursor-pointer whitespace-nowrap">
+                <button
+                  onClick={() => router.push('/reset-senha')}
+                  className="hover:text-orange-400 cursor-pointer whitespace-nowrap"
+                >
                   Esqueceu a senha?
                 </button>
               </div>
