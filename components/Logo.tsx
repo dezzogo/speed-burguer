@@ -1,11 +1,7 @@
-interface LogoProps {
-  label?: string;
-}
-
-export default function Logo({ label = 'Speed Burger Logo' }: LogoProps) {
+export default function Logo() {
   return (
-    <div className="bg-gray-200 text-gray-800 text-xl font-bold py-10 px-12 rounded-[3rem] mb-8 text-center shadow-lg w-full">
-      {label}
+    <div className="flex justify-center w-full mb-6">
+      <img src="/LogoSpeedBurguer.png" className="w-48" alt="Speed Burguer" />
     </div>
   );
 }
