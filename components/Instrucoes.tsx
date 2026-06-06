@@ -1,6 +1,6 @@
 export default function Instrucoes() {
   return (
-    <div className="text-black w-full px-2">
+    <div className="text-white w-full px-2">
       <h3 className="font-bold text-xl text-center mb-4">Instruções</h3>
       <ol className="list-decimal list-inside space-y-2 font-medium text-lg">
         <li>Compre um hambúrguer no Speed Burguer</li>

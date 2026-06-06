@@ -1,52 +1,42 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { supabase } from "../src/supabase";
-import type { ClienteData } from "../types";
-import { CiLock } from "react-icons/ci";
-import { PiPhoneThin } from "react-icons/pi";
-import { MdPersonOutline } from "react-icons/md";
-import { GoArrowLeft } from "react-icons/go";
-import Logo from "./Logo";
-import ScreenBackground from "./ScreenBackground";
+import { useRouter } from 'next/navigation';
+import { supabase } from '../src/supabase';
+import { useState } from 'react';
+import type { ClienteData } from '../types';
+import { CiLock } from 'react-icons/ci';
+import { PiPhoneThin } from 'react-icons/pi';
+import { MdPersonOutline } from 'react-icons/md';
+import { GoArrowLeft } from 'react-icons/go';
+import Logo from './Logo';
+import ScreenBackground from './ScreenBackground';
 
-interface CadastroScreenProps {
-  onCadastroSuccess: (cliente: ClienteData) => void;
-  onVoltarParaLogin: () => void;
-}
-
-export default function CadastroScreen({
-  onCadastroSuccess,
-  onVoltarParaLogin,
-}: CadastroScreenProps) {
-  const [nome, setNome] = useState("");
-  const [telefone, setTelefone] = useState("");
-  const [senha, setSenha] = useState("");
-  const [mensagem, setMensagem] = useState("");
+export default function CadastroPage() {
+  const router = useRouter();
+  const [nome, setNome] = useState('');
+  const [telefone, setTelefone] = useState('');
+  const [senha, setSenha] = useState('');
+  const [mensagem, setMensagem] = useState('');
 
   const fazerCadastro = async () => {
     if (!nome || !telefone || !senha) {
-      setMensagem("Por favor, preencha todos os campos.");
+      setMensagem('Por favor, preencha todos os campos.');
       return;
     }
 
-    setMensagem("Criando conta...");
+    setMensagem('Criando conta...');
 
     const { data, error } = await supabase
-      .from("cartoes_fidelidade")
+      .from('cartoes_fidelidade')
       .insert([{ nome_cliente: nome, telefone, senha, quantidade_carimbos: 0 }])
       .select()
       .single();
 
     if (error) {
-      setMensagem(
-        "Erro ao criar conta. Verifique os dados ou mude o telefone.",
-      );
+      setMensagem('Erro ao criar conta. Verifique os dados ou mude o telefone.');
     } else {
-      setNome("");
-      setTelefone("");
-      setSenha("");
-      onCadastroSuccess(data as ClienteData);
+      sessionStorage.setItem('cliente', JSON.stringify(data as ClienteData));
+      router.push('/principal');
     }
   };
 
@@ -56,13 +46,6 @@ export default function CadastroScreen({
         <div className="bg-black/40 rounded-[3em] shadow-xl w-full flex flex-col items-center border border-orange-500/80">
           <div className="w-full overflow-hidden">
             <Logo />
-          </div>
-
-          <div className="w-[80%] flex flex-col items-center text-center">
-            <h1 className="text-orange-500 font-bold text-3xl">Cadastrar-se</h1>
-            <p className="text-zinc-300 ">
-              Crie sua conta e usufrua do beneficio do seu Cartão Fidelidade!
-            </p>
           </div>
 
           <div className="w-full p-8 px-4 flex flex-col items-center gap-6">
@@ -119,7 +102,7 @@ export default function CadastroScreen({
             <div className="flex items-center gap-1 text-orange-500 text-sm font-semibold">
               <GoArrowLeft className="w-5 h-5 shrink-0" />
               <button
-                onClick={onVoltarParaLogin}
+                onClick={() => router.push('/login')}
                 className="hover:text-orange-400 cursor-pointer"
               >
                 Voltar para o Login
