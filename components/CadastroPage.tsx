@@ -47,6 +47,11 @@ export default function CadastroPage() {
           <div className="w-full overflow-hidden">
             <Logo />
           </div>
+          
+          <div className="flex flex-col items-center text-center">
+            <h1 className="text-orange-500 font-bold text-3xl">Cadastre-se</h1>
+            <p className="text-zinc-300 text-lg px-10">Crie sua conta e obtenha o benefício do seu Cartão Fidelidade!</p>
+          </div>
 
           <div className="w-full p-8 px-4 flex flex-col items-center gap-6">
             <div className="w-full flex border border-orange-500 rounded-2xl overflow-hidden">
