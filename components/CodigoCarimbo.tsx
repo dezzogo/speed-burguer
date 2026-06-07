@@ -1,68 +1,75 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { supabase } from '../src/supabase';
-import type { ClienteData } from '../types';
+import { useState } from "react";
+import { supabase } from "../src/supabase";
+import type { ClienteData } from "../types";
 
-// Código de resgate fixo para o MVP acadêmico
-const CODIGO_SECRETO_ATENDENTE = 'SPEED2024';
+// Código de resgate fixo para o MVP
+const CODIGO_SECRETO_ATENDENTE = "SPEED2024";
 
 interface CodigoCarimboProps {
   cliente: ClienteData;
   onCarimboAdicionado: (clienteAtualizado: ClienteData) => void;
 }
 
-export default function CodigoCarimbo({ cliente, onCarimboAdicionado }: CodigoCarimboProps) {
-  const [codigo, setCodigo] = useState('');
-  const [mensagem, setMensagem] = useState('');
+export default function CodigoCarimbo({
+  cliente,
+  onCarimboAdicionado,
+}: CodigoCarimboProps) {
+  const [codigo, setCodigo] = useState("");
+  const [mensagem, setMensagem] = useState("");
 
   const adicionarCarimbo = async () => {
     if (codigo !== CODIGO_SECRETO_ATENDENTE) {
-      setMensagem('Código inválido!');
+      setMensagem("Código inválido!");
       return;
     }
 
     if (cliente.quantidade_carimbos >= 10) {
-      setMensagem('Você já completou a cartela! Resgate o seu prêmio');
+      setMensagem("Você já completou a cartela! Resgate o seu prêmio");
       return;
     }
 
-    setMensagem('Adicionando...');
+    setMensagem("Adicionando...");
 
     const novaQuantidade = cliente.quantidade_carimbos + 1;
 
     const { error } = await supabase
-      .from('cartoes_fidelidade')
+      .from("cartoes_fidelidade")
       .update({ quantidade_carimbos: novaQuantidade })
-      .eq('id', cliente.id);
+      .eq("id", cliente.id);
 
     if (error) {
-      setMensagem('Erro ao adicionar carimbo.');
+      setMensagem("Erro ao adicionar carimbo.");
     } else {
-      setCodigo('');
-      setMensagem('✅ Selo adicionado com sucesso!');
+      setCodigo("");
+      setMensagem("✅ Selo adicionado com sucesso!");
       onCarimboAdicionado({ ...cliente, quantidade_carimbos: novaQuantidade });
     }
   };
 
   return (
-    <div className="bg-gray-200 w-full rounded-3xl p-6 shadow-md flex flex-col items-center mb-8">
-      <input
-        type="text"
-        placeholder="Digite o código"
-        className="bg-white rounded-full w-full py-3 px-6 mb-4 text-center text-black font-semibold outline-none focus:ring-2 focus:ring-orange-500"
-        value={codigo}
-        onChange={(e) => setCodigo(e.target.value.toUpperCase())}
-      />
-      <button
-        onClick={adicionarCarimbo}
-        className="bg-green-600 hover:bg-green-700 text-white font-bold rounded-full py-3 px-8 w-full transition-colors"
-      >
-        Adicionar
-      </button>
-      {mensagem && (
-        <p className="text-black font-bold mt-3 text-sm text-center">{mensagem}</p>
-      )}
+    <div className="p-[1px] rounded-[2rem] bg-gradient-to-br from-orange-500/60 via-zinc-700 to-orange-500/20 w-full">
+      <div className="w-full rounded-[2rem] bg-zinc-950 p-6">
+        <input
+          type="text"
+          placeholder="Digite o código"
+          className="w-full h-16 mb-6 rounded-full bg-zinc-950 border border-zinc-700 text-white text-center text-xl placeholder:text-zinc-500 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all"
+          value={codigo}
+          onChange={(e) => setCodigo(e.target.value.toUpperCase())}
+        />
+        <button
+          onClick={adicionarCarimbo}
+          className="w-full h-16 rounded-full bg-gradient-to-b from-orange-400 to-orange-600 text-white text-2xl font-bold shadow-[0_8px_25px_rgba(249,115,22,0.45)] cursor-pointer"
+        >
+          Adicionar
+        </button>
+        {mensagem && (
+          <p className="mt-4 text-sm text-orange-300 font-bold text-center">
+            {mensagem}
+          </p>
+        )}
+      </div>
     </div>
   );
 }
