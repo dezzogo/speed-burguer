@@ -1,4 +1,4 @@
-export type Tela = 'login' | 'cadastro' | 'principal';
+export type Tela = 'login' | 'cadastro' | 'principal' | 'admin';
 
 export interface ClienteData {
   id: number;
@@ -6,4 +6,5 @@ export interface ClienteData {
   telefone: string;
   senha: string;
   quantidade_carimbos: number;
+  admin: boolean;
 }

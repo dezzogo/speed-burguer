@@ -39,7 +39,12 @@ export default function LoginPage() {
       setMensagem('Telefone ou senha incorretos.');
     } else {
       sessionStorage.setItem('cliente', JSON.stringify(data as ClienteData));
-      router.push('/principal');
+      
+      if (data.admin === true) {
+        router.push('/admin');
+      } else {
+        router.push('/principal');
+      }
     }
   };
 
