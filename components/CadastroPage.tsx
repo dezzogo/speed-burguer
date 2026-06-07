@@ -7,7 +7,7 @@ import type { ClienteData } from '../types';
 import { CiLock } from 'react-icons/ci';
 import { PiPhoneThin } from 'react-icons/pi';
 import { MdPersonOutline } from 'react-icons/md';
-import { GoArrowLeft } from 'react-icons/go';
+import { GoArrowLeft, GoShieldCheck } from 'react-icons/go';
 import Logo from './Logo';
 import ScreenBackground from './ScreenBackground';
 
@@ -16,14 +16,25 @@ export default function CadastroPage() {
   const [nome, setNome] = useState('');
   const [telefone, setTelefone] = useState('');
   const [senha, setSenha] = useState('');
+  const [respostaSecreta, setRespostaSecreta] = useState('');
   const [mensagem, setMensagem] = useState('');
+
+  const PERGUNTAS_SECRETAS = [
+    'Qual o nome do seu primeiro pet?',
+    'Qual a cidade onde você nasceu?',
+    'Qual o nome da sua mãe?',
+    'Qual era o nome da sua escola primária?',
+    'Qual o seu time de futebol favorito?',
+  ];
+  const [perguntaSelecionada, setPerguntaSelecionada] = useState(PERGUNTAS_SECRETAS[0]);
 
   const fazerCadastro = async () => {
     const nomeTrimmed = nome.trim();
     const telefoneTrimmed = telefone.trim();
     const senhaTrimmed = senha.trim();
+    const respostaTrimmed = respostaSecreta.trim().toLowerCase();
 
-    if (!nomeTrimmed || !telefoneTrimmed || !senhaTrimmed) {
+    if (!nomeTrimmed || !telefoneTrimmed || !senhaTrimmed || !respostaTrimmed) {
       setMensagem('Por favor, preencha todos os campos.');
       return;
     }
@@ -46,7 +57,14 @@ export default function CadastroPage() {
 
     const { data, error } = await supabase
       .from('cartoes_fidelidade')
-      .insert([{ nome_cliente: nomeTrimmed, telefone: telefoneTrimmed, senha: senhaTrimmed, quantidade_carimbos: 0 }])
+      .insert([{
+        nome_cliente: nomeTrimmed,
+        telefone: telefoneTrimmed,
+        senha: senhaTrimmed,
+        quantidade_carimbos: 0,
+        pergunta_secreta: perguntaSelecionada,
+        resposta_secreta: respostaTrimmed,
+      }])
       .select()
       .single();
 
@@ -108,6 +126,38 @@ export default function CadastroPage() {
                 className="h-14 pl-2 grow bg-transparent text-zinc-300 placeholder:text-zinc-400 outline-none"
                 value={senha}
                 onChange={(e) => setSenha(e.target.value)}
+              />
+            </div>
+
+            {/* Pergunta secreta */}
+            <div className="w-full flex flex-col gap-2">
+              <label className="text-zinc-400 text-xs px-1">Pergunta de segurança</label>
+              <div className="w-full border border-orange-500 rounded-2xl overflow-hidden">
+                <select
+                  value={perguntaSelecionada}
+                  onChange={(e) => setPerguntaSelecionada(e.target.value)}
+                  className="w-full h-14 px-4 bg-transparent text-zinc-300 outline-none appearance-none cursor-pointer"
+                >
+                  {PERGUNTAS_SECRETAS.map((p) => (
+                    <option key={p} value={p} className="bg-zinc-900 text-zinc-300">
+                      {p}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Resposta secreta */}
+            <div className="w-full flex border border-orange-500 rounded-2xl overflow-hidden">
+              <div className="px-3 flex items-center justify-center">
+                <GoShieldCheck className="text-orange-500 w-5 h-5 shrink-0" />
+              </div>
+              <input
+                type="text"
+                placeholder="Sua resposta"
+                className="h-14 pl-2 grow bg-transparent text-zinc-300 placeholder:text-zinc-400 outline-none"
+                value={respostaSecreta}
+                onChange={(e) => setRespostaSecreta(e.target.value)}
               />
             </div>
 
