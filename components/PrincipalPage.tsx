@@ -58,7 +58,7 @@ export default function PrincipalPage() {
 
           <button
             disabled={!cartelaCompleta}
-            className={`w-full rounded-full font-bold py-3 shadow-md transition-colors ${
+            className={`w-full rounded-full font-bold py-3 shadow-md transition-colors cursor-pointer ${
               cartelaCompleta
                 ? 'bg-green-600 text-white hover:bg-green-700'
                 : 'bg-zinc-700 text-zinc-500 cursor-not-allowed'
