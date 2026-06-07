@@ -155,7 +155,7 @@ export default function ResetSenha() {
                 <button
                   onClick={buscarCliente}
                   disabled={carregando}
-                  className="w-full h-14 rounded-full bg-gradient-to-t from-orange-500 to-orange-800 text-white text-lg font-extrabold shadow-xl hover:opacity-90 transition-opacity disabled:opacity-50"
+                  className="w-full h-14 rounded-full bg-gradient-to-t from-orange-500 to-orange-800 text-white text-lg font-extrabold shadow-xl hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
                 >
                   Continuar
                 </button>

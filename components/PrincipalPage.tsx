@@ -37,36 +37,41 @@ export default function PrincipalPage() {
 
   return (
     <ScreenBackground>
-      <div className="mx-auto max-w-sm flex flex-col items-center px-4">
-        <div className="flex justify-between w-full items-center mb-4">
-          <h2 className="text-2xl font-bold text-white">Selos</h2>
+      <div className="mx-auto max-w-lg flex flex-col items-center px-6">
+        <div className="bg-black/40 rounded-[3em] shadow-xl w-full flex flex-col border border-orange-500/80 p-8 gap-6">
+
+          {/* Header */}
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-bold text-white">Selos</h2>
+            <button
+              onClick={handleSair}
+              className="bg-orange-500/20 border border-orange-500/60 text-orange-400 text-xs px-3 py-1 rounded-full hover:bg-orange-500/40 transition-colors"
+            >
+              Sair
+            </button>
+          </div>
+
+          <CartaoSelos
+            nomeCliente={cliente.nome_cliente}
+            quantidadeCarimbos={cliente.quantidade_carimbos}
+          />
+
           <button
-            onClick={handleSair}
-            className="bg-orange-500/20 border border-orange-500/60 text-orange-400 text-xs px-3 py-1 rounded-full hover:bg-orange-500/40 transition-colors"
+            disabled={!cartelaCompleta}
+            className={`w-full rounded-full font-bold py-3 shadow-md transition-colors cursor-pointer ${
+              cartelaCompleta
+                ? 'bg-green-600 text-white hover:bg-green-700'
+                : 'bg-zinc-700 text-zinc-500 cursor-not-allowed'
+            }`}
           >
-            Sair
+            Resgatar
           </button>
+
+          <CodigoCarimbo cliente={cliente} onCarimboAdicionado={handleClienteAtualizado} />
+
+          <Instrucoes />
+
         </div>
-
-        <CartaoSelos
-          nomeCliente={cliente.nome_cliente}
-          quantidadeCarimbos={cliente.quantidade_carimbos}
-        />
-
-        <button
-          disabled={!cartelaCompleta}
-          className={`rounded-full font-bold py-2 px-8 mb-6 shadow-md transition-colors ${
-            cartelaCompleta
-              ? 'bg-green-600 text-white hover:bg-green-700'
-              : 'bg-zinc-700 text-zinc-500 cursor-not-allowed'
-          }`}
-        >
-          Resgatar
-        </button>
-
-        <CodigoCarimbo cliente={cliente} onCarimboAdicionado={handleClienteAtualizado} />
-
-        <Instrucoes />
       </div>
     </ScreenBackground>
   );
