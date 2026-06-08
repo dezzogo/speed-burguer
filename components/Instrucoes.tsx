@@ -41,7 +41,7 @@ export default function Instrucoes() {
 
           <div>
             <p className="text-xl font-bold text-zinc-200">
-              Troque 10 carimbos por um
+              Troque 8 carimbos por um
             </p>
 
             <p className="text-2xl font-bold text-orange-500">
