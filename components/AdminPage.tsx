@@ -98,7 +98,7 @@ export default function AdminPage() {
                 </button>
               </div>
               <div className="bg-zinc-950 rounded-2xl h-32 flex items-center justify-center">
-                <span className="text-6xl font-bold tracking-[1rem] text-orange-500">
+                <span className="text-5xl md:text-6xl font-bold tracking-[1rem] text-orange-500">
                   {codigoGerado || "------"}
                 </span>
               </div>

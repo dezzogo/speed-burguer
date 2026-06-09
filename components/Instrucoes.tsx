@@ -22,7 +22,7 @@ export default function Instrucoes() {
             "Resgate seu código acima",
           ].map((texto, index) => (
             <div key={index} className="flex items-center gap-4">
-              <div className="w-5 h-5 m-[0.150em] rounded-full border border-orange-500 text-orange-500 text-sm flex items-center justify-center font-bold">
+              <div className="w-5 h-5 m-[0.150em] rounded-full border border-orange-500 text-orange-500 text-sm flex items-center justify-center font-bold shrink-0">
                 {index + 1}
               </div>
               <p className="text-sm text-zinc-200">{texto}</p>

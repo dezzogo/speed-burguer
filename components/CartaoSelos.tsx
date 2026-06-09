@@ -15,7 +15,7 @@ export default function CartaoSelos({
         <p className="text-white text-3xl font-semibold mb-3 text-center">
           Olá, {nomeCliente}!
         </p>
-        <div className="grid grid-cols-4 gap-5">
+        <div className="grid grid-cols-4 gap-2 place-items-center">
           {Array.from({ length: TOTAL_SELOS }).map((_, index) => {
             const temSelo = index < quantidadeCarimbos;
             return (
