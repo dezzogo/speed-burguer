@@ -6,7 +6,7 @@ import { useState } from 'react';
 import type { ClienteData } from '../types';
 import { CiLock } from 'react-icons/ci';
 import { PiPhoneThin } from 'react-icons/pi';
-import { GoQuestion } from 'react-icons/go';
+import { GoQuestion, GoEye, GoEyeClosed } from 'react-icons/go';
 import { MdPersonOutline } from 'react-icons/md';
 import Logo from './Logo';
 import ScreenBackground from './ScreenBackground';
@@ -15,13 +15,15 @@ export default function LoginPage() {
   const router = useRouter();
   const [telefone, setTelefone] = useState('');
   const [senha, setSenha] = useState('');
+  const [mostrarSenha, setMostrarSenha] = useState(false);
   const [mensagem, setMensagem] = useState('');
 
   const fazerLogin = async () => {
-    const telefoneTrimmed = telefone.trim();
+    // Regex para extrair apenas os números na hora do login também
+    const telefoneNumeros = telefone.replace(/\D/g, '');
     const senhaTrimmed = senha.trim();
 
-    if (!telefoneTrimmed || !senhaTrimmed) {
+    if (!telefoneNumeros || !senhaTrimmed) {
       setMensagem('Por favor, preencha todos os campos.');
       return;
     }
@@ -31,7 +33,7 @@ export default function LoginPage() {
     const { data, error } = await supabase
       .from('cartoes_fidelidade')
       .select('*')
-      .eq('telefone', telefoneTrimmed)
+      .eq('telefone', telefoneNumeros)
       .eq('senha', senhaTrimmed)
       .single();
 
@@ -70,17 +72,25 @@ export default function LoginPage() {
               />
             </div>
 
-            <div className="w-full flex border border-orange-500 rounded-2xl overflow-hidden">
+            {/* Input de senha atualizado com o olhinho */}
+            <div className="w-full flex border border-orange-500 rounded-2xl overflow-hidden pr-3">
               <div className="px-3 flex items-center justify-center">
                 <CiLock className="text-orange-500 w-5 h-5 shrink-0" />
               </div>
               <input
-                type="password"
+                type={mostrarSenha ? "text" : "password"}
                 placeholder="Senha"
                 className="h-14 pl-2 grow bg-transparent text-zinc-300 placeholder:text-zinc-400 outline-none"
                 value={senha}
                 onChange={(e) => setSenha(e.target.value)}
               />
+              <button
+                type="button"
+                onClick={() => setMostrarSenha(!mostrarSenha)}
+                className="flex items-center justify-center text-zinc-400 hover:text-orange-500 transition-colors cursor-pointer"
+              >
+                {mostrarSenha ? <GoEye className="w-5 h-5" /> : <GoEyeClosed className="w-5 h-5" />}
+              </button>
             </div>
 
             <button
@@ -91,7 +101,7 @@ export default function LoginPage() {
             </button>
 
             {mensagem && (
-              <p className="text-red-400 text-sm font-semibold">{mensagem}</p>
+              <p className="text-red-400 text-sm font-semibold text-center">{mensagem}</p>
             )}
 
             <div className="flex justify-between gap-8 w-full text-orange-500 text-sm font-semibold">

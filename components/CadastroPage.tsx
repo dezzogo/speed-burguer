@@ -7,7 +7,7 @@ import type { ClienteData } from '../types';
 import { CiLock } from 'react-icons/ci';
 import { PiPhoneThin } from 'react-icons/pi';
 import { MdPersonOutline } from 'react-icons/md';
-import { GoArrowLeft, GoShieldCheck } from 'react-icons/go';
+import { GoArrowLeft, GoShieldCheck, GoEye, GoEyeClosed } from 'react-icons/go';
 import Logo from './Logo';
 import ScreenBackground from './ScreenBackground';
 
@@ -18,6 +18,7 @@ export default function CadastroPage() {
   const [senha, setSenha] = useState('');
   const [respostaSecreta, setRespostaSecreta] = useState('');
   const [mensagem, setMensagem] = useState('');
+  const [mostrarSenha, setMostrarSenha] = useState(false);
 
   const PERGUNTAS_SECRETAS = [
     'Qual o nome do seu primeiro pet?',
@@ -39,13 +40,19 @@ export default function CadastroPage() {
       return;
     }
 
+    const telefoneNumeros = telefoneTrimmed.replace(/\D/g, '');
+
+    if (telefoneNumeros.length < 10 || telefoneNumeros.length > 11) {
+      setMensagem('Telefone inválido. Digite o DDD e o número.');
+      return;
+    }
+
     setMensagem('Verificando dados...');
 
-    // Verifica se o telefone já está cadastrado
     const { data: existente } = await supabase
       .from('cartoes_fidelidade')
       .select('id')
-      .eq('telefone', telefoneTrimmed)
+      .eq('telefone', telefoneNumeros)
       .maybeSingle();
 
     if (existente) {
@@ -59,7 +66,7 @@ export default function CadastroPage() {
       .from('cartoes_fidelidade')
       .insert([{
         nome_cliente: nomeTrimmed,
-        telefone: telefoneTrimmed,
+        telefone: telefoneNumeros,
         senha: senhaTrimmed,
         quantidade_carimbos: 0,
         pergunta_secreta: perguntaSelecionada,
@@ -109,27 +116,34 @@ export default function CadastroPage() {
               </div>
               <input
                 type="text"
-                placeholder="Telefone"
+                placeholder="Telefone (com DDD)"
                 className="h-14 pl-2 grow bg-transparent text-zinc-300 placeholder:text-zinc-400 outline-none"
                 value={telefone}
                 onChange={(e) => setTelefone(e.target.value)}
               />
             </div>
 
-            <div className="w-full flex border border-orange-500 rounded-2xl overflow-hidden">
+            {/* Input de senha atualizado com o olhinho */}
+            <div className="w-full flex border border-orange-500 rounded-2xl overflow-hidden pr-3">
               <div className="px-3 flex items-center justify-center">
                 <CiLock className="text-orange-500 w-5 h-5 shrink-0" />
               </div>
               <input
-                type="password"
+                type={mostrarSenha ? "text" : "password"}
                 placeholder="Senha"
                 className="h-14 pl-2 grow bg-transparent text-zinc-300 placeholder:text-zinc-400 outline-none"
                 value={senha}
                 onChange={(e) => setSenha(e.target.value)}
               />
+              <button
+                type="button"
+                onClick={() => setMostrarSenha(!mostrarSenha)}
+                className="flex items-center justify-center text-zinc-400 hover:text-orange-500 transition-colors cursor-pointer"
+              >
+                {mostrarSenha ? <GoEye className="w-5 h-5" /> : <GoEyeClosed className="w-5 h-5" />}
+              </button>
             </div>
 
-            {/* Pergunta secreta */}
             <div className="w-full flex flex-col gap-2">
               <label className="text-zinc-400 text-xs px-1">Pergunta de segurança</label>
               <div className="w-full border border-orange-500 rounded-2xl overflow-hidden">
@@ -147,7 +161,6 @@ export default function CadastroPage() {
               </div>
             </div>
 
-            {/* Resposta secreta */}
             <div className="w-full flex border border-orange-500 rounded-2xl overflow-hidden">
               <div className="px-3 flex items-center justify-center">
                 <GoShieldCheck className="text-orange-500 w-5 h-5 shrink-0" />
@@ -169,7 +182,7 @@ export default function CadastroPage() {
             </button>
 
             {mensagem && (
-              <p className="text-red-400 text-sm font-semibold">{mensagem}</p>
+              <p className="text-red-400 text-sm font-semibold text-center">{mensagem}</p>
             )}
 
             <div className="flex items-center gap-1 text-orange-500 text-sm font-semibold">

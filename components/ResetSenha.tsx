@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { PiPhoneThin } from 'react-icons/pi';
 import { CiLock } from 'react-icons/ci';
-import { GoArrowLeft, GoShieldCheck } from 'react-icons/go';
+import { GoArrowLeft, GoShieldCheck, GoEye, GoEyeClosed } from 'react-icons/go';
 import Logo from './Logo';
 import ScreenBackground from './ScreenBackground';
 
@@ -19,15 +19,19 @@ export default function ResetSenha() {
   const [telefoneReset, setTelefoneReset] = useState('');
   const [clienteReset, setClienteReset] = useState<any>(null);
   const [respostaReset, setRespostaReset] = useState('');
+  
   const [novaSenha, setNovaSenha] = useState('');
   const [confirmarNovaSenha, setConfirmarNovaSenha] = useState('');
+  const [mostrarSenha, setMostrarSenha] = useState(false);
+  const [mostrarConfirmarSenha, setMostrarConfirmarSenha] = useState(false);
 
   const [mensagem, setMensagem] = useState('');
   const [carregando, setCarregando] = useState(false);
 
-  // Etapa 1 — buscar cliente pelo telefone
   const buscarCliente = async () => {
-    if (!telefoneReset) {
+    const telefoneNumeros = telefoneReset.replace(/\D/g, '');
+
+    if (!telefoneNumeros) {
       setMensagem('Digite o seu telefone.');
       return;
     }
@@ -37,7 +41,7 @@ export default function ResetSenha() {
     const { data, error } = await supabase
       .from('cartoes_fidelidade')
       .select('*')
-      .eq('telefone', telefoneReset)
+      .eq('telefone', telefoneNumeros)
       .single();
 
     setCarregando(false);
@@ -51,13 +55,16 @@ export default function ResetSenha() {
     }
   };
 
-  // Etapa 2 — validar resposta secreta
   const validarResposta = () => {
     if (!respostaReset) {
       setMensagem('Insira a sua resposta.');
       return;
     }
-    if (respostaReset.toLowerCase().trim() === clienteReset.resposta_secreta) {
+
+    const respostaDigitada = respostaReset.toLowerCase().trim();
+    const respostaBanco = (clienteReset.resposta_secreta || '').toLowerCase().trim();
+
+    if (respostaDigitada === respostaBanco) {
       setMensagem('');
       setEtapa('nova-senha');
     } else {
@@ -65,7 +72,6 @@ export default function ResetSenha() {
     }
   };
 
-  // Etapa 3 — salvar nova senha
   const salvarNovaSenha = async () => {
     if (!novaSenha || !confirmarNovaSenha) {
       setMensagem('Preencha todos os campos.');
@@ -110,7 +116,6 @@ export default function ResetSenha() {
 
           <div className="w-full p-8 px-4 flex flex-col items-center gap-6">
 
-            {/* Stepper */}
             <div className="flex items-center gap-2 w-full justify-center">
               {etapas.map((_, i) => (
                 <div key={i} className="flex items-center gap-2">
@@ -132,7 +137,6 @@ export default function ResetSenha() {
               ))}
             </div>
 
-            {/* Etapa 1 — Telefone */}
             {etapa === 'telefone' && (
               <>
                 <p className="text-zinc-400 text-sm text-center">
@@ -145,7 +149,7 @@ export default function ResetSenha() {
                   </div>
                   <input
                     type="text"
-                    placeholder="Telefone"
+                    placeholder="Telefone (com DDD)"
                     className="h-14 pl-2 grow bg-transparent text-zinc-300 placeholder:text-zinc-400 outline-none"
                     value={telefoneReset}
                     onChange={(e) => setTelefoneReset(e.target.value)}
@@ -162,14 +166,12 @@ export default function ResetSenha() {
               </>
             )}
 
-            {/* Etapa 2 — Resposta secreta */}
             {etapa === 'resposta' && (
               <>
                 <p className="text-zinc-400 text-sm text-center">
                   Responda à pergunta de segurança da sua conta.
                 </p>
 
-                {/* Exibe a pergunta escolhida no cadastro */}
                 {clienteReset?.pergunta_secreta && (
                   <div className="w-full bg-zinc-800/60 border border-zinc-700 rounded-2xl px-4 py-3">
                     <p className="text-orange-400 text-sm font-medium text-center">
@@ -200,37 +202,50 @@ export default function ResetSenha() {
               </>
             )}
 
-            {/* Etapa 3 — Nova senha */}
             {etapa === 'nova-senha' && (
               <>
                 <p className="text-zinc-400 text-sm text-center">
                   Escolha uma nova senha para a sua conta.
                 </p>
 
-                <div className="w-full flex border border-orange-500 rounded-2xl overflow-hidden">
+                <div className="w-full flex border border-orange-500 rounded-2xl overflow-hidden pr-3">
                   <div className="px-3 flex items-center justify-center">
                     <CiLock className="text-orange-500 w-5 h-5 shrink-0" />
                   </div>
                   <input
-                    type="password"
+                    type={mostrarSenha ? "text" : "password"}
                     placeholder="Nova senha"
                     className="h-14 pl-2 grow bg-transparent text-zinc-300 placeholder:text-zinc-400 outline-none"
                     value={novaSenha}
                     onChange={(e) => setNovaSenha(e.target.value)}
                   />
+                  <button
+                    type="button"
+                    onClick={() => setMostrarSenha(!mostrarSenha)}
+                    className="flex items-center justify-center text-zinc-400 hover:text-orange-500 transition-colors cursor-pointer"
+                  >
+                    {mostrarSenha ? <GoEye className="w-5 h-5" /> : <GoEyeClosed className="w-5 h-5" />}
+                  </button>
                 </div>
 
-                <div className="w-full flex border border-orange-500 rounded-2xl overflow-hidden">
+                <div className="w-full flex border border-orange-500 rounded-2xl overflow-hidden pr-3">
                   <div className="px-3 flex items-center justify-center">
                     <CiLock className="text-orange-500 w-5 h-5 shrink-0" />
                   </div>
                   <input
-                    type="password"
+                    type={mostrarConfirmarSenha ? "text" : "password"}
                     placeholder="Confirmar nova senha"
                     className="h-14 pl-2 grow bg-transparent text-zinc-300 placeholder:text-zinc-400 outline-none"
                     value={confirmarNovaSenha}
                     onChange={(e) => setConfirmarNovaSenha(e.target.value)}
                   />
+                  <button
+                    type="button"
+                    onClick={() => setMostrarConfirmarSenha(!mostrarConfirmarSenha)}
+                    className="flex items-center justify-center text-zinc-400 hover:text-orange-500 transition-colors cursor-pointer"
+                  >
+                    {mostrarConfirmarSenha ? <GoEye className="w-5 h-5" /> : <GoEyeClosed className="w-5 h-5" />}
+                  </button>
                 </div>
 
                 <button
@@ -243,12 +258,10 @@ export default function ResetSenha() {
               </>
             )}
 
-            {/* Mensagem de erro/status */}
             {mensagem && (
               <p className="text-red-400 text-sm font-semibold text-center">{mensagem}</p>
             )}
 
-            {/* Voltar */}
             <div className="flex items-center gap-1 text-orange-500 text-sm font-semibold">
               <GoArrowLeft className="w-5 h-5 shrink-0" />
               <button
