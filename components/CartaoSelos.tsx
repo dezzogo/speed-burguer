@@ -21,13 +21,13 @@ export default function CartaoSelos({
             return (
               <div
                 key={index}
-                className={`h-14 w-14 flex items-center justify-center border shadow-lg transition-all duration-300 rounded-2xl text-2xl ${
+                className={`aspect-square w-full max-w-[3.5rem] flex items-center justify-center border shadow-lg transition-all duration-300 rounded-2xl ${
                   temSelo
                     ? "bg-orange-500 border-orange-400 shadow-[0_0_20px_rgba(249,115,22,0.35)]"
                     : "bg-zinc-900 border-zinc-700"
                 }`}
               >
-                {temSelo && <span className="text-4xl">🍔</span>}
+                {temSelo && <span className="text-[clamp(1rem,5vw,1.75rem)]">🍔</span>}
               </div>
             );
           })}
