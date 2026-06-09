@@ -61,8 +61,8 @@ export default function CodigoCarimbo({
 
     await supabase
       .from('codigos_resgate')
-      .update({ usado: true })
-      .eq('id', codigoData.id);
+      .delete()
+      .eq('codigo', codigoTrimmed);
 
     setCodigo('');
     setMensagem('✅ Selo adicionado com sucesso!');
