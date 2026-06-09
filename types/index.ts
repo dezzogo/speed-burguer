@@ -7,4 +7,5 @@ export interface ClienteData {
   senha: string;
   quantidade_carimbos: number;
   admin: boolean;
+  resgates_disponiveis: number;
 }

@@ -8,6 +8,7 @@ import CartaoSelos from './CartaoSelos';
 import CodigoCarimbo from './CodigoCarimbo';
 import Instrucoes from './Instrucoes';
 import { supabase } from '../src/supabase';
+import { GoGift } from 'react-icons/go';
 
 const TOTAL_CARTELA = 8;
 
@@ -56,10 +57,14 @@ export default function PrincipalPage() {
     setMensagemResgate('Processando...');
 
     const novaQtd = cliente.quantidade_carimbos - TOTAL_CARTELA;
+    const novosResgates = (cliente.resgates_disponiveis || 0) + 1;
 
     const { error } = await supabase
       .from('cartoes_fidelidade')
-      .update({ quantidade_carimbos: novaQtd })
+      .update({ 
+        quantidade_carimbos: novaQtd,
+        resgates_disponiveis: novosResgates 
+      })
       .eq('id', cliente.id);
 
     if (error) {
@@ -68,7 +73,12 @@ export default function PrincipalPage() {
       return;
     }
 
-    const clienteAtualizado = { ...cliente, quantidade_carimbos: novaQtd };
+    const clienteAtualizado = { 
+      ...cliente, 
+      quantidade_carimbos: novaQtd,
+      resgates_disponiveis: novosResgates
+    };
+    
     setCliente(clienteAtualizado);
     sessionStorage.setItem('cliente', JSON.stringify(clienteAtualizado));
     setModalResgatar(false);
@@ -79,13 +89,13 @@ export default function PrincipalPage() {
   if (!cliente) return null;
 
   const cartelaCompleta = cliente.quantidade_carimbos >= TOTAL_CARTELA;
+  const temResgatePendente = cliente.resgates_disponiveis > 0;
 
   return (
     <ScreenBackground>
       <div className="mx-auto max-w-lg flex flex-col items-center px-6">
         <div className="bg-black/40 rounded-[3em] shadow-xl w-full flex flex-col border border-orange-500/80 p-8 gap-6">
 
-          {/* Header */}
           <div className="flex justify-between items-center">
             <h2 className="text-2xl font-bold text-white">Selos</h2>
             <button
@@ -95,6 +105,21 @@ export default function PrincipalPage() {
               Sair
             </button>
           </div>
+
+          {temResgatePendente && (
+            <div className="w-full bg-green-500/20 border border-green-500/50 rounded-2xl p-4 flex items-center justify-between shadow-inner">
+              <div className="flex items-center gap-3">
+                <GoGift className="text-green-400 w-6 h-6 shrink-0" />
+                <div className="flex flex-col">
+                  <span className="text-green-400 font-bold text-sm">Prêmio Disponível!</span>
+                  <span className="text-green-200 text-xs">Mostre esta tela no caixa</span>
+                </div>
+              </div>
+              <div className="bg-green-500 text-black font-extrabold text-xl w-10 h-10 rounded-full flex items-center justify-center shrink-0">
+                {cliente.resgates_disponiveis}
+              </div>
+            </div>
+          )}
 
           <CartaoSelos
             nomeCliente={cliente.nome_cliente}
@@ -110,7 +135,7 @@ export default function PrincipalPage() {
                 : 'bg-zinc-700 text-zinc-500 cursor-not-allowed'
             }`}
           >
-            Resgatar
+            Converter em Prêmio
           </button>
 
           <CodigoCarimbo cliente={cliente} onCarimboAdicionado={handleClienteAtualizado} />
@@ -120,7 +145,6 @@ export default function PrincipalPage() {
         </div>
       </div>
 
-      {/* Modal de confirmação de resgate */}
       {modalResgatar && cliente && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
           <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setModalResgatar(false)} />
@@ -131,14 +155,14 @@ export default function PrincipalPage() {
             </div>
 
             <p className="text-zinc-300 text-sm mb-2">
-              Você está prestes a resgatar seu <span className="text-orange-400 font-semibold">Combo Speed Master</span>!
+              Você está prestes a converter seus selos em um <span className="text-orange-400 font-semibold">Combo Speed Master</span>!
             </p>
             <p className="text-zinc-300 text-sm mb-6">
               Selos atuais:{' '}
               <span className="text-orange-400 font-semibold">{cliente.quantidade_carimbos}</span>
-              {cliente.quantidade_carimbos > TOTAL_CARTELA && (
+              {cliente.quantidade_carimbos >= TOTAL_CARTELA && (
                 <span className="text-zinc-400">
-                  {' '}→ após resgate:{' '}
+                  {' '}→ restarão:{' '}
                   <span className="text-green-400 font-semibold">
                     {cliente.quantidade_carimbos - TOTAL_CARTELA}
                   </span>

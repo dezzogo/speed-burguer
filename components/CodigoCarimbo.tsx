@@ -24,7 +24,7 @@ export default function CodigoCarimbo({
       return;
     }
 
-    if (cliente.quantidade_carimbos >= 10) {
+    if (cliente.quantidade_carimbos >= 8) {
       setMensagem("Você já completou a cartela! Resgate o seu prêmio");
       return;
     }
