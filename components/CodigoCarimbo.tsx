@@ -6,11 +6,13 @@ import type { ClienteData } from "../types";
 
 interface CodigoCarimboProps {
   cliente: ClienteData;
+  totalCartela: number;
   onCarimboAdicionado: (clienteAtualizado: ClienteData) => void;
 }
 
 export default function CodigoCarimbo({
   cliente,
+  totalCartela,
   onCarimboAdicionado,
 }: CodigoCarimboProps) {
   const [codigo, setCodigo] = useState("");
@@ -24,7 +26,7 @@ export default function CodigoCarimbo({
       return;
     }
 
-    if (cliente.quantidade_carimbos >= 8) {
+    if (cliente.quantidade_carimbos >= totalCartela) {
       setMensagem("Você já completou a cartela! Resgate o seu prêmio");
       return;
     }

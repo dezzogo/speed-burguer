@@ -1,22 +1,24 @@
 interface CartaoSelosProps {
   nomeCliente: string;
   quantidadeCarimbos: number;
+  totalSelos: number;
 }
-
-const TOTAL_SELOS = 8;
 
 export default function CartaoSelos({
   nomeCliente,
   quantidadeCarimbos,
+  totalSelos,
 }: CartaoSelosProps) {
+  const colunas = totalSelos <= 6 ? 3 : 4;
+
   return (
     <div className="p-[1px] rounded-[2.5rem] bg-gradient-to-br from-orange-500/40 via-zinc-700 to-orange-500/20 shadow-2xl w-full">
       <div className="bg-black rounded-[2.5rem] p-8 py-4">
         <p className="text-white text-3xl font-semibold mb-3 text-center">
           Olá, {nomeCliente}!
         </p>
-        <div className="grid grid-cols-4 gap-2 place-items-center">
-          {Array.from({ length: TOTAL_SELOS }).map((_, index) => {
+        <div className={`grid grid-cols-${colunas} gap-2 place-items-center`}>
+          {Array.from({ length: totalSelos }).map((_, index) => {
             const temSelo = index < quantidadeCarimbos;
             return (
               <div

@@ -13,10 +13,11 @@ interface ModalState {
 
 interface TabelaClientesProps {
   clientes: ClienteData[];
+  totalCartela: number;
   onClientesChange: (clientes: ClienteData[]) => void;
 }
 
-export default function TabelaClientes({ clientes, onClientesChange }: TabelaClientesProps) {
+export default function TabelaClientes({ clientes, totalCartela, onClientesChange }: TabelaClientesProps) {
   const [busca, setBusca] = useState("");
   const [menuAbertoId, setMenuAbertoId] = useState<number | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
