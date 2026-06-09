@@ -38,7 +38,7 @@ export default function Instrucoes({
               key={index}
               className="flex items-center gap-4"
             >
-              <div className="w-7 h-7 rounded-full border border-orange-500 text-orange-500 text-sm flex items-center justify-center font-bold">
+              <div className="w-7 h-7 rounded-full border border-orange-500 text-orange-500 text-sm flex items-center justify-center font-bold shrink-0">
                 {index + 1}
               </div>
 
